@@ -16,7 +16,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $search = Request::get('search');
     $users = User::all();
-    return view('welcome', $users);
+    return view('welcome', compact('users'));
+});
+
+Route::get('/search', function () {
+    $search = Request()->search;
+    $users = User::query()
+        ->where('name', 'Like', '%' . $search . '%')
+        ->orWhere('email', 'LIKE', '%' . $search . '%')
+        ->get();
+    return view('welcome', compact('users'));
 });
